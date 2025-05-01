@@ -1,27 +1,15 @@
-import cv2
-from ultralytics import solutions, YOLO
-import psycopg2
 import datetime
+
+import cv2
 import numpy as np
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
+from config import create_parking_model
+from db_handshake import connect_to_db, update_parking_status
 
+# initial setup
+conn = connect_to_db()
+cur = conn.cursor()
 
-# Database connection setup
-try:
-    conn = psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-    )
-    cursor = conn.cursor()
-except psycopg2.Error as e:
-    print(f"Error connecting to PostgreSQL database: {e}")
-    exit()
 
 # Video capture
 cap = cv2.VideoCapture("myVideo3.mp4")
@@ -31,13 +19,8 @@ assert cap.isOpened(), "Error reading video file"
 w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
 video_writer = cv2.VideoWriter("parking_management2.avi", cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 
-# My Parking Managment stuff. Lets make em
-parkingmanager = solutions.ParkingManagement(
-    model="yolo11n.pt",  # path to model file
-    json_file="bounding_boxes.json",  # path to parking annotations file
-    verbose=False,
-    show=True
-)
+
+parkingmanager = create_parking_model()
 
 # Process each frame
 while cap.isOpened():
@@ -57,7 +40,9 @@ while cap.isOpened():
         pts_array = np.array(region["points"], dtype=np.int32).reshape((-1, 1, 2))
         occupied = False
 
-        # IS THERE ANYTHING INSIDE THE BOX????
+        # This does the math to find the center point of my bounding box
+        # and checks if there is something in the very center or is
+        # intercepting the center
         for box, cls in zip(parkingmanager.boxes, parkingmanager.clss):
             xc, yc = int((box[0] + box[2]) / 2), int((box[1] + box[3]) / 2)
             if cv2.pointPolygonTest(pts_array, (xc, yc), False) >= 0:
@@ -71,22 +56,18 @@ while cap.isOpened():
     for spot, is_occupied in spot_status.items():
         # print(f"{spot}: {'Occupied' if is_occupied else 'Available'}") # THIS IS DEBUG AND IT WORKED
 
-        # update it please I'll die
+        # This updates the database continuously,
+        # so if there is something within this box, it will say there is somthing within that spot
         timestamp = datetime.datetime.now()
-        cursor.execute("""
-            INSERT INTO parking_spots (SpotName, doyouexisthere, givememytime)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (SpotName)
-            DO UPDATE SET doyouexisthere = EXCLUDED.doyouexisthere, givememytime = EXCLUDED.givememytime;
-        """, (spot, not is_occupied, timestamp))
-        conn.commit()
+        update_parking_status(cur, spot, is_occupied, timestamp)
+    conn.commit()
 
-    # Write out my file I beg you
+    # Write out my file, I beg you
     video_writer.write(results.plot_im)
 
-# Its finally over
+# When it's all finished, delete everything
 cap.release()
 video_writer.release()
-cursor.close()
+cur.close()
 conn.close()
 cv2.destroyAllWindows()
