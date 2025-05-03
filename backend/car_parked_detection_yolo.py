@@ -1,10 +1,13 @@
 import datetime
 
+import json
+import requests
+
 import cv2
 import numpy as np
 
-from config import create_parking_model
-from db_handshake import connect_to_db, update_parking_status
+from backend.config import create_parking_model
+from backend.db_handshake import connect_to_db, update_parking_status
 
 # initial setup
 conn = connect_to_db()
@@ -61,6 +64,11 @@ while cap.isOpened():
         timestamp = datetime.datetime.now()
         update_parking_status(cur, spot, is_occupied, timestamp)
     conn.commit()
+
+    # try:
+    #     requests.post("http://localhost:8000/push-update")
+    # except:
+    #     pass
 
     # Write out my file, I beg you
     video_writer.write(results.plot_im)

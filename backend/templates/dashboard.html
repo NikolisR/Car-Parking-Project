@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parking Spot Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+    canvas {
+      background: #fff;
+      border: 2px solid #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🚗 Real-Time Parking Spot Dashboard</h2>
+  <canvas id="parkingCanvas" width="800" height="650"></canvas>
+
+  <h3>📋 Parking Spot Status</h3>
+  <table border="1" cellpadding="10" style="margin: 0 auto; background: #fff;">
+    <thead>
+      <tr>
+        <th>Spot</th>
+        <th>Status</th>
+        <th>Last Updated</th>
+      </tr>
+    </thead>
+    <tbody id="statusTableBody">
+      <!-- Rows will be injected by JS -->
+    </tbody>
+  </table>
+
+<script>
+  let cachedBoxes = null;
+  let lastStatusesJSON = null;
+
+  async function fetchBoundingBoxes() {
+    if (!cachedBoxes) {
+      const res = await fetch('/api/bounding-boxes');
+      cachedBoxes = await res.json();
+    }
+    return cachedBoxes;
+  }
+
+  function formatTimestamp(ts) {
+    const date = new Date(ts);
+    return date.toLocaleString();
+  }
+
+  function isSameStatus(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  async function updateDashboard(statuses) {
+    const currentStatusesJSON = JSON.stringify(statuses);
+    if (isSameStatus(currentStatusesJSON, lastStatusesJSON)) {
+      console.log("⚠️ No changes in data. Skipping redraw.");
+      return;
+    }
+
+    lastStatusesJSON = currentStatusesJSON;
+    console.log("📊 Updating dashboard with new statuses:", statuses);
+
+    const boxes = await fetchBoundingBoxes();
+
+    // Draw polygons on canvas
+    const canvas = document.getElementById('parkingCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    boxes.forEach((region, index) => {
+      const spotName = `Spot_${index + 1}`;
+      const spotStatus = statuses.find(s => s.spot === spotName);
+      const available = spotStatus ? spotStatus.available : false;
+
+      // Polygon fill
+      ctx.fillStyle = available ? 'green' : 'red';
+      ctx.beginPath();
+      const points = region.points;
+      ctx.moveTo(points[0][0], points[0][1]);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0], points[i][1]);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Label on canvas
+      const [x, y] = points[0];
+      ctx.fillStyle = 'white';
+      ctx.font = '14px Arial';
+      ctx.fillText(spotName, x + 5, y + 20);
+    });
+
+    // Update HTML table
+    const table = document.getElementById('statusTableBody');
+    table.innerHTML = ''; // Clear old rows
+
+    statuses.forEach(s => {
+      const row = document.createElement('tr');
+      const statusText = s.available ? '✅ Available' : '❌ Occupied';
+      const color = s.available ? 'green' : 'red';
+
+      row.innerHTML = `
+        <td>${s.spot}</td>
+        <td style="color:${color}">${statusText}</td>
+        <td>${formatTimestamp(s.timestamp)}</td>
+      `;
+      table.appendChild(row);
+    });
+  }
+
+  async function fetchAndUpdate() {
+    try {
+      const res = await fetch('/api/parking-spot');
+      const statuses = await res.json();
+      updateDashboard(statuses);
+    } catch (err) {
+      console.error("❌ Failed to fetch parking spot data:", err);
+    }
+  }
+
+  fetchAndUpdate(); // initial load
+  setInterval(fetchAndUpdate, 5000); // every 5 seconds
+</script>
+
+</body>
+</html>
