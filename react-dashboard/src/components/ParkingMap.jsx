@@ -14,7 +14,7 @@ const ParkingMap = ({ spotsData, statuses, width, height }) => {
       <img
         src="/ccMap.png"
         alt="Parking Lot"
-        style={{ display: 'block', width: '50%', height: '50%' }}
+        style={{ display: 'block', width: '100%', height: '100%' }}
       />
 
       {/* SVG overlay for status dots */}
@@ -25,8 +25,8 @@ const ParkingMap = ({ spotsData, statuses, width, height }) => {
           position: 'absolute',
           top: 0,
           left: 0,
-          width: '50%',
-          height: '50%',
+          width: '100%',
+          height: '100%',
           pointerEvents: 'none',
         }}
       >

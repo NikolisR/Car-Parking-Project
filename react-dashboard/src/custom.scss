@@ -1,0 +1,25 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+
+
+$theme-colors: (
+  "primary":   #1e1e2f, // sidebar
+  "secondary": #2e2f33, // mid panels
+  "light":     #2e2f33, // page background
+  "info":      #4f46e5, // accent
+  "success":   #16a34a,
+  "danger":    #eb5757,
+  "warning":   #f2c94c
+);
+
+$font-family-base: 'Poppins', sans-serif;
+$body-bg: map-get($theme-colors, 'light');
+$spacer: 1.5rem;
+$border-radius: .75rem;
+$border-radius-lg: 1rem;
+
+@import 'bootstrap/scss/bootstrap';
+
+.shadow-soft {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
