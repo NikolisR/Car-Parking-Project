@@ -1,33 +1,49 @@
-// ParkingLayout.jsx
 import React from 'react';
 
-const ParkingLayout = ({ statuses }) => {
-  const renderColumns = (start, end) => (
-    statuses.slice(start, end).map((spot) => (
-      <div key={spot.spot} className="flex flex-col items-center gap-2">
-        <div className="bg-cardDark p-2 rounded-lg w-16 text-center text-white font-medium">
-          {spot.spot.replace('_', '')}
-        </div>
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${spot.available ? 'bg-greenStatus' : 'bg-redStatus'}`}>
-          {spot.available ? '✅' : '❌'}
-        </div>
-      </div>
-    ))
-  );
+const ParkingMap = ({ spotsData, statuses, width, height }) => {
+  // Merge coordinates with availability status
+  const spotsWithStatus = spotsData.map(spot => {
+    const record = statuses.find(s => s.spot === spot.id);
+    const isTaken = record ? !record.available : false;
+    return { ...spot, isTaken };
+  });
 
   return (
-    <div className="bg-cardDark p-6 rounded-xl shadow-lg mb-6">
-      <h3 className="text-white text-xl font-semibold mb-4">🅿️ Parking Map</h3>
-      <div className="border border-gray-700 rounded-xl p-4 relative">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white font-medium">Entry</span>
-        <div className="bg-gray-800 p-4 rounded-lg flex justify-between">
-          {renderColumns(0, Math.ceil(statuses.length / 2))}
-          {renderColumns(Math.ceil(statuses.length / 2), statuses.length)}
-        </div>
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white font-medium">Entry</span>
-      </div>
+    <div style={{ position: 'relative', width, height }}>
+      {/* Base parking lot image */}
+      <img
+        src="/ccMap.png"
+        alt="Parking Lot"
+        style={{ display: 'block', width: '50%', height: '50%' }}
+      />
+
+      {/* SVG overlay for status dots */}
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        preserveAspectRatio="xMidYMid meet"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '50%',
+          height: '50%',
+          pointerEvents: 'none',
+        }}
+      >
+        {spotsWithStatus.map(spot => (
+          <circle
+            key={spot.id}
+            cx={spot.xPct * width}
+            cy={spot.yPct * height}
+            r={8}
+            fill={spot.isTaken ? 'red' : 'green'}
+            stroke="#fff"
+            strokeWidth={2}
+          />
+        ))}
+      </svg>
     </div>
   );
 };
 
-export default ParkingLayout;
+export default ParkingMap;
