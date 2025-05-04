@@ -1,14 +1,11 @@
-/* src/components/ParkingMap.css */
-
-.parking-map-container {
+.map-responsive {
   position: relative;
   width: 100%;
-  height: 100%;   /* fills the 400px Card.Body */
+  height: 100%;
   overflow: hidden;
 }
 
-.parking-map-image,
-.parking-map-overlay {
+.parking-map-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -16,10 +13,20 @@
   height: 100%;
 }
 
-.parking-map-image {
-  object-fit: contain; /* preserves aspect ratio, no distortion */
+.parking-map-image,
+.parking-map-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* stretch and distort to fit container */
 }
 
 .parking-map-overlay {
   pointer-events: none;
+}
+
+.parking-map-zoom-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }

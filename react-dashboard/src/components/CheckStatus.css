@@ -1,0 +1,44 @@
+.status-row {
+  transition: background-color 0.2s;
+}
+
+.status-row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Pulsing status dot */
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.status-dot.available {
+  background-color: #28a745;
+}
+
+.status-dot.occupied {
+  background-color: #dc3545;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Vertically center cells */
+.status-row td {
+  vertical-align: middle;
+}

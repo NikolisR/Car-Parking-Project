@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row, Col, Card } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -33,21 +34,57 @@ export default function OccupancyChart({ dataPoints }) {
         data: values,
         fill: false,
         tension: 0.3,
-        pointRadius: 3,
+        pointRadius: 4,
+        borderColor: '#4dd0e1',         // light cyan line
+        backgroundColor: '#4dd0e1',     // for points
+        pointBackgroundColor: '#4dd0e1',
+        pointHoverRadius: 6,
       }
     ]
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: false }
+      legend: {
+        position: 'top',
+        labels: { color: 'rgba(255,255,255,0.9)' }  // legend text
+      },
+      title: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        bodyColor: '#eee',
+        cornerRadius: 4
+      }
     },
     scales: {
-      y: { beginAtZero: true, max: 100 }
+      x: {
+        ticks: { color: 'rgba(255,255,255,0.8)' },
+        grid: { color: 'rgba(255,255,255,0.1)' }
+      },
+      y: {
+        beginAtZero: true,
+        max: 100,
+        ticks: { color: 'rgba(255,255,255,0.8)' },
+        grid: { color: 'rgba(255,255,255,0.1)' }
+      }
     }
   };
 
-  return <Line data={data} options={options} />;
+  return (
+    <Row className="g-0">
+      <Col md={12}>
+        <Card className="h-100 shadow-soft">
+          <Card.Header className="bg-primary text-white">
+            Occupancy Over Time
+          </Card.Header>
+          <Card.Body className="p-0" style={{ height: '300px', width: '100%' }}>
+            <Line data={data} options={options} />
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
+  );
 }

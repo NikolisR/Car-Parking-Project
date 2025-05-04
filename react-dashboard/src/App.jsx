@@ -1,108 +1,130 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
-import {Container, Row, Col, Card} from 'react-bootstrap';
-
-import ParkingMap from './components/ParkingMap';
-import SideBar from './components/SideBar';
-import TopBar from './components/TopBar';
-import ChartAndStatus from './components/ChartAndStatus';
-import AvailableDisplay from './components/AvailabilityDisplay.jsx';
-import spotsData from './data/spots.json';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { fetchParkingSpot } from './api/parkingAPI';
-import './components/ParkingMap.css';
+import { useAuth0 } from '@auth0/auth0-react';
 
+import Dashboard from './pages/Dashboard';
+import LiveFeeds from './pages/LiveFeeds';
+import Settings from './pages/Settings';
+import Login from './pages/Login.jsx';
+import './components/ParkingMap.css';
+import Admin from "./pages/Admin.jsx";
+import AdminLayoutEditor from './pages/AdminLayoutEditor';
+import AdminParkingMapSetter from "./pages/AdminParkingMapSetter.jsx";
+
+
+function ProtectedRoutes({ element }) {
+  const { isAuthenticated, isLoading } = useAuth0();
+  if (isLoading) return <div>Loading...</div>;
+  return isAuthenticated ? element : <Navigate to="/login" replace />;
+}
 
 export default function App() {
-  const MAP_WIDTH = 1874;
-  const MAP_HEIGHT = 1218;
-
   const [statuses, setStatuses] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem('darkMode')) || false;
+  });
 
+  // persist dark mode
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', darkMode);
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  // fetch statuses periodically
   useEffect(() => {
     let isMounted = true;
-
-    async function fetchData() {
+    const fetchData = async () => {
       try {
         const data = await fetchParkingSpot();
         if (isMounted) setStatuses(data);
       } catch (err) {
-        console.error('Error fetching statuses:', err);
+        console.error(err);
       }
-    }
-
-    fetchData();                                // initial load
-    const intervalId = setInterval(fetchData, 10000); // poll every 10s
-
+    };
+    fetchData();
+    const id = setInterval(fetchData, 5000);
     return () => {
       isMounted = false;
-      clearInterval(intervalId);
+      clearInterval(id);
     };
   }, []);
 
-  // derive stats and chart data
-  const total = spotsData.length;
-  const available = statuses.filter(s => s.available).length;
-  const occupied = total - available;
-
-  const chartData = [
-    { time: '8 AM',  occupiedPercentage: Math.round((occupied/total)*100) },
-    { time: '12 PM', occupiedPercentage: Math.round((occupied/total)*100) },
-    { time: '4 PM',  occupiedPercentage: Math.round((occupied/total)*100) },
-  ];
-
-  const stats = [
-    { id: 1, title: 'Total Spots',  value: total,     variant: 'primary' },
-    { id: 2, title: 'Available',    value: available, variant: 'success' },
-    { id: 3, title: 'Occupied',     value: occupied,  variant: 'danger'  },
-    { id: 4, title: 'Change (24h)', value: '–',       variant: 'warning' }
-  ];
-
   return (
-    <Container fluid className="vh-flex bg-primary">
-      <Row className="h-100">
+    <Routes>
+      {/* Public route */}
+      <Route path="/login" element={<Login />} />
 
-        {/* Sidebar */}
-        <Col xs={2} className="bg-primary text-white d-flex flex-column p-3">
-          <SideBar />
-        </Col>
+      {/* Protected routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoutes
+            element={
+              <Dashboard
+                statuses={statuses}
+                setStatuses={setStatuses}
+                showSidebar={showSidebar}
+                setShowSidebar={setShowSidebar}
+              />
+            }
+          />
+        }
+      />
+      <Route
+        path="/live-feeds"
+        element={
+          <ProtectedRoutes
+            element={
+              <LiveFeeds
+                showSidebar={showSidebar}
+                setShowSidebar={setShowSidebar}
+              />
+            }
+          />
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoutes
+            element={
+              <Settings
+                showSidebar={showSidebar}
+                setShowSidebar={setShowSidebar}
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+              />
+            }
+          />
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoutes
+            element={
+              <Admin
+                  showSidebar={showSidebar}
+                  setShowSidebar={setShowSidebar}
+              />
+            }
+          />
+        }
+      />
+      <Route
+        path="/admin/layout-editor"
+        element={<ProtectedRoutes element={<AdminLayoutEditor />} />}
+      />
+      <Route
+        path="/admin/parking-map-setter"
+        element={<ProtectedRoutes element={<AdminParkingMapSetter />} />}
+      />
 
-        {/* Top Bar */}
-        <Col xs={10} className="p-4 overflow-auto">
-          <TopBar />
-
-          {/* Spot Status */}
-          <AvailableDisplay stats={stats} />
-
-          {/* Map */}
-          <Row className="mb-4">
-            <Col>
-              <Card className="h-100 shadow-soft">
-                <Card.Header className="bg-primary text-white">
-                  Parking Lot Map
-                </Card.Header>
-                <Card.Body
-                  className="p-0"
-                  style={{
-                    height: '800px',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <ParkingMap
-                    spotsData={spotsData}
-                    statuses={statuses}
-                    width={MAP_WIDTH}
-                    height={MAP_HEIGHT}
-                  />
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Chart & Status Table */}
-          <ChartAndStatus chartData={chartData} statuses={statuses} />
-
-
-        </Col>
-      </Row>
-    </Container>
+      {/* Fallback to login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }

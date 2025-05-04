@@ -1,34 +1,60 @@
-import React from 'react';
+// src/components/ParkingMap.jsx
+import React, { useState, useEffect } from 'react';
+import './ParkingMap.css';
+import { fetchLayoutImage } from '../api/parkingAPI';
 
-const ParkingMap = ({ spotsData, statuses, width, height }) => {
-  // Merge coordinates with availability status
+const MAP_LAYOUT_ID = 'default';  // match whatever ID you used in AdminParkingMapSetter
+
+export default function ParkingMap({ spotsData, statuses }) {
+  const width = 1874;
+  const height = 1218;
+
+  const [bgUrl, setBgUrl] = useState(null);
+  const [error, setError] = useState(null);
+
+  // 1️⃣ on mount, grab the current layout image URL from backend
+  useEffect(() => {
+    (async () => {
+      try {
+        const url = await fetchLayoutImage(MAP_LAYOUT_ID);
+        setBgUrl(url);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load map image');
+      }
+    })();
+  }, []);
+
+  // 2️⃣ merge each spot with its current occupied status
   const spotsWithStatus = spotsData.map(spot => {
     const record = statuses.find(s => s.spot === spot.id);
-    const isTaken = record ? !record.available : false;
-    return { ...spot, isTaken };
+    return {
+      ...spot,
+      isTaken: record ? !record.available : false
+    };
   });
 
-  return (
-    <div style={{ position: 'relative', width, height }}>
-      {/* Base parking lot image */}
-      <img
-        src="/ccMap.png"
-        alt="Parking Lot"
-        style={{ display: 'block', width: '100%', height: '100%' }}
-      />
+  if (error) {
+    return <div className="text-danger">{error}</div>;
+  }
 
-      {/* SVG overlay for status dots */}
+  return (
+    <div className="parking-map-container">
+      {/* if bgUrl isn’t loaded yet, you could show a spinner or placeholder */}
+      {bgUrl ? (
+        <img
+          src={bgUrl}
+          alt="Parking Lot"
+          className="parking-map-image"
+        />
+      ) : (
+        <div className="parking-map-placeholder">Loading map…</div>
+      )}
+
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        preserveAspectRatio="xMidYMid meet"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-        }}
+        preserveAspectRatio="none"
+        className="parking-map-overlay"
       >
         {spotsWithStatus.map(spot => (
           <circle
@@ -44,6 +70,4 @@ const ParkingMap = ({ spotsData, statuses, width, height }) => {
       </svg>
     </div>
   );
-};
-
-export default ParkingMap;
+}

@@ -13,6 +13,9 @@ from backend.db_handshake import connect_to_db, update_parking_status
 conn = connect_to_db()
 cur = conn.cursor()
 
+# ⬇️ WIPE OUT EVERYTHING before you upsert your two boxes:
+cur.execute("DELETE FROM parking_spots;")
+conn.commit()
 
 # Video capture
 cap = cv2.VideoCapture("myVideo3.mp4")
