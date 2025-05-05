@@ -1,4 +1,3 @@
-// src/pages/Admin.jsx
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Offcanvas } from 'react-bootstrap';
 import { FaUsersCog } from 'react-icons/fa';

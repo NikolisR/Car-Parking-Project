@@ -4,7 +4,7 @@ import { Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { Home, MapPin, Settings, User, LogOut, Shield } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
-import './Sidebar.css';
+import '../styles/SideBar.css';
 
 
 export default function SideBar({ onLinkClick }) {

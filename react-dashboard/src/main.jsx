@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'leaflet/dist/leaflet.css';
-import './custom.scss';
+import './styles/custom.scss';
 
 import { Auth0Provider } from '@auth0/auth0-react';
 import App from './App.jsx';

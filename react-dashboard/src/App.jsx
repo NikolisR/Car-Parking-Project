@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { fetchParkingSpot } from './api/parkingAPI';
@@ -8,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import LiveFeeds from './pages/LiveFeeds';
 import Settings from './pages/Settings';
 import Login from './pages/Login.jsx';
-import './components/ParkingMap.css';
+import './styles/ParkingMap.css';
 import Admin from "./pages/Admin.jsx";
 import AdminLayoutEditor from './pages/AdminLayoutEditor';
 import AdminParkingMapSetter from "./pages/AdminParkingMapSetter.jsx";

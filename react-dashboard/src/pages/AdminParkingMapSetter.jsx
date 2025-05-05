@@ -1,17 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  ProgressBar,
-  Toast,
-  Offcanvas,
-  ButtonGroup
-} from 'react-bootstrap';
+import {Container, Row, Col, Card, Form, Button, ProgressBar, Toast, Offcanvas, ButtonGroup} from 'react-bootstrap';
 import TopBar from '../components/TopBar';
 import SideBar from '../components/SideBar';
 import { Stage, Layer, Circle, Image as KonvaImage } from 'react-konva';

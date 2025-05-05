@@ -23,5 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 /.env
-/localhost-key.pem
-/localhost.pem
+/certs

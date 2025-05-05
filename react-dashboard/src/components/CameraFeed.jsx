@@ -1,7 +1,6 @@
-// src/components/CameraFeed.jsx
 import React from 'react';
 import { LIVE_FEED_URL } from '../api/parkingAPI';
-import './CameraFeed.css';
+import '../styles/CameraFeed.css';
 
 export default function CameraFeed({ url = LIVE_FEED_URL }) {
   return (

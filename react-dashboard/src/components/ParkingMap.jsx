@@ -1,6 +1,5 @@
-// src/components/ParkingMap.jsx
 import React, { useState, useEffect } from 'react';
-import './ParkingMap.css';
+import '../styles/ParkingMap.css';
 import { fetchLayoutImage } from '../api/parkingAPI';
 
 const MAP_LAYOUT_ID = 'default';  // match whatever ID you used in AdminParkingMapSetter
@@ -40,7 +39,7 @@ export default function ParkingMap({ spotsData, statuses }) {
 
   return (
     <div className="parking-map-container">
-      {/* if bgUrl isn’t loaded yet, you could show a spinner or placeholder */}
+      {/* show spinner? ????? */}
       {bgUrl ? (
         <img
           src={bgUrl}

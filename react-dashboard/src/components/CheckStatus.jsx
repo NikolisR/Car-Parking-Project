@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Table } from 'react-bootstrap';
-import './CheckStatus.css';
+import '../styles/CheckStatus.css';
 
 export default function CheckStatus({ statuses }) {
   return (

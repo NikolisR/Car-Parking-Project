@@ -1,5 +1,5 @@
 import psycopg2
-from backend.config import DATABASE_CONFIG
+from backend.utils.config import  DATABASE_CONFIG
 
 def connect_to_db():
     try:

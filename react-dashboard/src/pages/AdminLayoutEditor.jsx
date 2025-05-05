@@ -1,16 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  Toast,
-  ProgressBar,
-  Offcanvas
-} from 'react-bootstrap';
+import {Container, Row, Col, Card, Form, Button, Toast, ProgressBar, Offcanvas} from 'react-bootstrap';
 import { Stage, Layer, Line, Circle, Image as KonvaImage } from 'react-konva';
 import useImage from 'use-image';
 import TopBar from '../components/TopBar';
@@ -27,7 +17,6 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
   const [toastMessage, setToastMessage] = useState('');
   const [toastVariant, setToastVariant] = useState('success');
 
-  // Drawing state
   const [points, setPoints] = useState([]);
   const [boxes, setBoxes] = useState([]);
   const stageRef = useRef();
@@ -58,7 +47,7 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
 
     try {
       const res = await axios.post(
-        'http://localhost:8000/admin/upload-image',
+        'https://localhost:8000/admin/upload-image',
         data,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -68,7 +57,7 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
           }
         }
       );
-      const url = `http://localhost:8000${res.data.url}`;
+      const url = `https://localhost:8000${res.data.url}`;
       setImageUrl(url);
       setToastMessage('Upload successful! You can now draw boxes.');
       setToastVariant('success');
@@ -83,6 +72,37 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
       setUploading(false);
     }
   };
+
+  const handleCaptureSnapshot = async () => {
+    try {
+      const res = await axios.post('https://localhost:8000/api/capture-snapshot');
+      const snapshotUrl = `https://localhost:8000${res.data.url}`;
+      setImageUrl(snapshotUrl);
+      setSelectedFile(null);
+      setPoints([]);
+      setBoxes([]);
+      setToastMessage('Snapshot captured!');
+      setToastVariant('info');
+      setShowToast(true);
+
+      // Trigger browser download
+      const imageBlob = await axios.get(snapshotUrl, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([imageBlob.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'snapshot.jpg');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (err) {
+      console.error('Snapshot error:', err);
+      setToastMessage('Failed to capture snapshot');
+      setToastVariant('danger');
+      setShowToast(true);
+    }
+  };
+
 
   const handleStageClick = e => {
     if (!imageUrl) return;
@@ -163,7 +183,11 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
                       {uploading ? 'Uploading...' : 'Upload'}
                     </Button>
                   </Col>
-                  <Col md={2}>{uploading && <ProgressBar now={progress} label={`${progress}%`} />}</Col>
+                  <Col md={2}>
+                    <Button variant="secondary" onClick={handleCaptureSnapshot} disabled={uploading}>
+                      Use Camera Snapshot
+                    </Button>
+                  </Col>
                 </Row>
               </Card.Body>
             </Card>
@@ -210,6 +234,9 @@ export default function AdminLayoutEditor({ darkMode, setDarkMode }) {
             </Form.Group>
             <Button className="mt-2" onClick={handleUpload} disabled={uploading || !selectedFile}>
               {uploading ? 'Uploading...' : 'Upload'}
+            </Button>
+            <Button className="mt-2 ms-2" variant="secondary" onClick={handleCaptureSnapshot} disabled={uploading}>
+              Use Camera Snapshot
             </Button>
             {uploading && <ProgressBar className="mt-2" now={progress} label={`${progress}%`} />}
           </Card.Body>
