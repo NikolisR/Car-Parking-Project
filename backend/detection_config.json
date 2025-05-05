@@ -1,0 +1,5 @@
+{
+  "status": "stopped",
+  "video_source": "0",
+  "model": "yolo11n.pt"
+}
