@@ -34,7 +34,6 @@ export default function TopBar({ toggleSidebar }) {
 
 
 
-        {/* User greeting (md+) */}
 
 
         <Nav className="ms-auto align-items-center d-none d-md-flex">

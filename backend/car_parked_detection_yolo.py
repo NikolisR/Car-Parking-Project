@@ -30,6 +30,10 @@ def run_parking_detection(source=0, stop_event: Event = None):
     conn = connect_to_db()
     cur = conn.cursor()
 
+    print("Deleting old spots checker")
+    cur.execute("DELETE FROM parking_spots")
+    conn.commit()
+
     try:
         while cap.isOpened() and not stop_event.is_set():
             ret, im0 = cap.read()
@@ -53,8 +57,12 @@ def run_parking_detection(source=0, stop_event: Event = None):
 
                 spot_status[spot_name] = occupied
 
+
             for spot, is_occupied in spot_status.items():
                 update_parking_status(cur, spot, is_occupied, datetime.datetime.now())
+
+
+
             conn.commit()
     finally:
         cap.release()

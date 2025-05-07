@@ -1,4 +1,3 @@
-// src/components/VideoPreview.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Spinner, Card } from 'react-bootstrap';
 

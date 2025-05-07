@@ -1,4 +1,3 @@
-// src/main.jsx
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,7 +13,7 @@ createRoot(document.getElementById('root')).render(
     clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
     authorizationParams={{
       redirect_uri: `${window.location.origin}/login`,
-      audience: import.meta.env.VITE_AUTH0_AUDIENCE // remove if you don’t need API scopes
+      audience: import.meta.env.VITE_AUTH0_AUDIENCE
     }}
     scope="openid profile email"
   >

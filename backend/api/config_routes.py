@@ -1,5 +1,3 @@
-# backend/api/config_routes.py
-
 from fastapi import APIRouter
 from pydantic import BaseModel
 

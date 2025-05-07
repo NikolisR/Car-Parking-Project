@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [statuses, setStatuses] = useState([]);
 
-  // fetch parking statuses every 15s
+  // fetch parking statuses every 5s
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
@@ -31,7 +31,6 @@ export default function Dashboard() {
     };
   }, []);
 
-  // derive total from API data
   const total = statuses.length;
   const available = statuses.filter(s => s.available).length;
   const occupied = total - available;
@@ -59,7 +58,6 @@ export default function Dashboard() {
         </Offcanvas.Body>
       </Offcanvas>
 
-      {/* Desktop layout */}
       <Container fluid className="bg-light d-none d-md-flex p-0">
         <Row className="g-0 flex-grow-1 overflow-hidden">
           <Col md={2} className="bg-primary text-white pe-2 overflow-auto">
@@ -82,7 +80,6 @@ export default function Dashboard() {
         </Row>
       </Container>
 
-      {/* Mobile layout */}
       <Container fluid className="d-md-none p-3">
         <AvailableDisplay stats={stats} />
         <Card className="shadow-soft mb-3" style={{ height: '250px', overflowY: 'auto' }}>

@@ -15,9 +15,10 @@ def update_parking_status(cur, spot, is_occupied, timestamp):
         INSERT INTO parking_spots (SpotName, doyouexisthere, givememytime)
         VALUES (%s, %s, %s)
         ON CONFLICT (SpotName)
-        DO UPDATE SET doyouexisthere = EXCLUDED.doyouexisthere,
-                      givememytime  = EXCLUDED.givememytime;
+        DO UPDATE SET doyouexisthere = EXCLUDED.doyouexisthere, givememytime = EXCLUDED.givememytime;
     """, (spot, not is_occupied, timestamp))
+
+
 
 def clear_parking_table(cur):
     """Deletes every row in parking_spots."""

@@ -51,7 +51,6 @@ export default function LiveFeeds({ showSidebar, setShowSidebar }) {
 
   return (
     <>
-      {/* Top Bar + Mobile Offcanvas */}
       <TopBar toggleSidebar={() => setOffcanvasVisible(true)} />
       <Offcanvas
         show={offcanvasVisible}
@@ -67,7 +66,6 @@ export default function LiveFeeds({ showSidebar, setShowSidebar }) {
         </Offcanvas.Body>
       </Offcanvas>
 
-      {/* Desktop Layout */}
       <Container fluid className="bg-light  d-none d-md-flex p-0">
         <Row className="g-0 flex-grow-1">
           <Col md={2} className="bg-primary text-white pe-2 overflow-auto">
@@ -76,7 +74,6 @@ export default function LiveFeeds({ showSidebar, setShowSidebar }) {
           <Col md={10} className="p-4 overflow-auto">
             <h2 className="mb-4">Live Camera Feeds</h2>
             <Row>
-              {/* Main Feed Card */}
               <Col md={9} className="mb-3">
                 <Card
                   className="shadow-sm h-100"
@@ -115,7 +112,6 @@ export default function LiveFeeds({ showSidebar, setShowSidebar }) {
                 </Card>
               </Col>
 
-              {/* Camera Selector */}
               <Col md={3}>
                 <Nav variant="pills" className="flex-column">
                   {cameras.map(cam => (

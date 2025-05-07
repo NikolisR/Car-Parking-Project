@@ -1,4 +1,3 @@
-// src/components/SideBar.jsx
 import React from 'react';
 import { Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
@@ -10,12 +9,10 @@ import '../styles/SideBar.css';
 export default function SideBar({ onLinkClick }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
   const displayName = user?.name || user?.email || 'there';
-  // Determine admin based on roles claim
   const namespace = 'https://api.pctparking.app/';
   const roles = user?.[namespace + 'roles'] || [];
   const isAdmin = roles.includes('Admin');
 
-  // Build nav items conditionally
   const items = [
     { label: 'Dashboard',        icon: <Home size={20} />,    path: '/' },
     { label: 'Live Camera Feed', icon: <MapPin size={20} />,  path: '/live-feeds' },
@@ -32,7 +29,6 @@ export default function SideBar({ onLinkClick }) {
         <h4 className="m-0">Parking Lot</h4>
       </div>
 
-      {/* Navigation links */}
       {items.map(({ label, icon, path }) => (
         <Nav.Link
           as={NavLink}
@@ -47,7 +43,6 @@ export default function SideBar({ onLinkClick }) {
         </Nav.Link>
       ))}
 
-      {/* Logout button */}
       {isAuthenticated && (
         <Nav.Link
           onClick={() => {
@@ -61,10 +56,8 @@ export default function SideBar({ onLinkClick }) {
         </Nav.Link>
       )}
 
-      {/* Spacer to push greeting to bottom */}
       <div className="mt-auto"></div>
 
-      {/* Mobile-only greeting at bottom with divider */}
       <div className="d-md-none pt-3 border-top text-white d-flex align-items-center">
         {isLoading ? (
           <span>Loading...</span>

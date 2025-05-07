@@ -34,7 +34,6 @@ async function _fetchCurrentLayoutImage() {
   return `${API_BASE}${url}`;
 }
 
-// Export under the legacy name so your imports don't break:
 export const fetchLayoutImage = _fetchCurrentLayoutImage;
 
 /**

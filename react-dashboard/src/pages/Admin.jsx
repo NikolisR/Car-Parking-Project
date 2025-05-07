@@ -125,7 +125,6 @@ export default function Admin({ darkMode, setDarkMode }) {
                     </Button>
                   </div>
 
-                  {/* Detection Controls */}
                   <div className="mt-5">
                     <h5>Detection Control</h5>
                     <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -140,7 +139,6 @@ export default function Admin({ darkMode, setDarkMode }) {
                     </p>
                   </div>
 
-                  {/* Video Source Controls */}
                   <div className="mt-4">
                     <h5>Video Source</h5>
                     <select
@@ -159,7 +157,6 @@ export default function Admin({ darkMode, setDarkMode }) {
                     </Button>
                   </div>
 
-                  {/* 🔍 Live Preview Card */}
                   <VideoPreview source={videoSource} />
                 </Card.Body>
               </Card>

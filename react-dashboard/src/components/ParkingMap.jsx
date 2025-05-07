@@ -11,7 +11,6 @@ export default function ParkingMap({ spotsData, statuses }) {
   const [bgUrl, setBgUrl] = useState(null);
   const [error, setError] = useState(null);
 
-  // 1️⃣ on mount, grab the current layout image URL from backend
   useEffect(() => {
     (async () => {
       try {
@@ -24,7 +23,6 @@ export default function ParkingMap({ spotsData, statuses }) {
     })();
   }, []);
 
-  // 2️⃣ merge each spot with its current occupied status
   const spotsWithStatus = spotsData.map(spot => {
     const record = statuses.find(s => s.spot === spot.id);
     return {
@@ -39,7 +37,6 @@ export default function ParkingMap({ spotsData, statuses }) {
 
   return (
     <div className="parking-map-container">
-      {/* show spinner? ????? */}
       {bgUrl ? (
         <img
           src={bgUrl}

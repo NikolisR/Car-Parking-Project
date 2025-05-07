@@ -1,4 +1,3 @@
-# backend/utils/model.py
 from ultralytics import solutions
 from pathlib import Path
 

@@ -1,4 +1,3 @@
-// src/pages/Settings.jsx
 import React, { useState } from 'react';
 import {
   Container,
@@ -22,10 +21,8 @@ export default function Settings({ showSidebar, setShowSidebar, darkMode, setDar
 
   return (
     <>
-      {/* Top bar with burger toggle */}
       <TopBar toggleSidebar={() => setOffcanvasVisible(true)} />
 
-      {/* Mobile offcanvas sidebar */}
       <Offcanvas
         show={offcanvasVisible}
         onHide={() => setOffcanvasVisible(false)}
@@ -40,21 +37,17 @@ export default function Settings({ showSidebar, setShowSidebar, darkMode, setDar
         </Offcanvas.Body>
       </Offcanvas>
 
-      {/* Desktop layout: sidebar + main */}
       <Container fluid className="bg-light d-none d-md-flex p-0">
         <Row className="g-0 flex-grow-1">
-          {/* Static sidebar */}
           <Col md={2} className="bg-primary text-white pe-3 overflow-auto">
             <SideBar onLinkClick={() => setOffcanvasVisible(false)} />
           </Col>
 
-          {/* Main content */}
           <Col md={10} className="p-4 overflow-auto">
             <h2 className="mb-4 d-flex align-items-center">
               <SettingsIcon className="me-2" /> Settings
             </h2>
 
-            {/* Appearance toggle card */}
             <Card className="shadow-soft mb-4" style={{ maxWidth: '400px' }}>
               <Card.Header className="bg-secondary text-white">
                 Appearance
@@ -75,7 +68,6 @@ export default function Settings({ showSidebar, setShowSidebar, darkMode, setDar
         </Row>
       </Container>
 
-      {/* Mobile single‐column scroll view */}
       <Container fluid className="d-md-none p-3">
         <h2 className="mb-4 d-flex align-items-center">
           <SettingsIcon className="me-2" /> Settings

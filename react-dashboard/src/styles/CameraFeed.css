@@ -1,18 +1,14 @@
-/* src/components/CameraFeed.css */
-
-/* 16:9 via padding-top, good for fluid-width mobile cards */
 .feed-responsive {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;   /* 16:9 */
+  padding-top: 56.25%;
   overflow: hidden;
 }
 
-/* Fixed-height container, e.g. desktop cards */
 .feed-fixed {
   position: relative;
   width: 100%;
-  height: 60vh;          /* or whatever desktop height you prefer */
+  height: 60vh;
   overflow: hidden;
 }
 

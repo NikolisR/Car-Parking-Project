@@ -1,5 +1,3 @@
-# backend/core/detection.py
-
 import threading
 from ..utils.settings import load_config, save_config, PROJECT_ROOT
 from ..car_parked_detection_yolo import run_parking_detection

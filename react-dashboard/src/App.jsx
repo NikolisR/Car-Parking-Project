@@ -26,7 +26,6 @@ export default function App() {
     return JSON.parse(localStorage.getItem('darkMode')) || false;
   });
 
-  // persist dark mode
   useEffect(() => {
     document.body.classList.toggle('dark-mode', darkMode);
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
@@ -53,10 +52,8 @@ export default function App() {
 
   return (
     <Routes>
-      {/* Public route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected routes */}
       <Route
         path="/"
         element={

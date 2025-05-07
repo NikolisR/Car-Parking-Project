@@ -1,7 +1,7 @@
 @import '../../node_modules/bootstrap/scss/functions';
 @import '../../node_modules/bootstrap/scss/variables';
+@import '../../node_modules/bootstrap/scss/bootstrap';
 
-// 1) Dark-mode palette inspired by Tailwind
 $theme-colors: (
   "primary":    #111827, // sidebar
   "secondary":  #1f2937, // mid panels
@@ -13,7 +13,6 @@ $theme-colors: (
   "warning":    #f59e0b  // amber-500
 );
 
-// 2) Typography & spacing
 $font-family-base: 'Poppins', sans-serif;
 $body-bg: map-get($theme-colors, 'light');
 $body-color: map-get($theme-colors, 'dark');
@@ -21,22 +20,16 @@ $spacer: 1.5rem;
 $border-radius: 0.75rem;
 $border-radius-lg: 1rem;
 
-// 3) Core Bootstrap
-@import '../../node_modules/bootstrap/scss/bootstrap';
 
-// 4) Soft shadows
 .shadow-soft {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-// 5) Global CSS Custom Properties & Base Element Styles
 :root {
-  /* Typography */
   --font-family-base: var(#{$font-family-base});
   --line-height-base: 1.5;
   --font-weight-base: 400;
 
-  /* Colors */
   --color-text: rgba(255, 255, 255, 0.87);
   --color-bg: #242424;
   --color-link: #646cff;
@@ -44,7 +37,6 @@ $border-radius-lg: 1rem;
   --color-button-bg: #1a1a1a;
   --color-button-border-hover: #646cff;
 
-  /* Other */
   --border-radius: #{$border-radius};
   --transition-base: 0.25s;
 
@@ -79,7 +71,6 @@ html, body, #root {
 //  min-height: 100vh;
 //}
 
-// Link styles
 a {
   font-weight: 500;
   color: var(--color-link);
@@ -90,13 +81,11 @@ a:hover {
   color: var(--color-link-hover);
 }
 
-// Heading
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
-// Button styles
 button {
   border-radius: var(--border-radius);
   border: 1px solid transparent;
@@ -117,7 +106,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-// Light-mode overrides
 @media (prefers-color-scheme: light) {
   :root {
     --color-text: #212529;

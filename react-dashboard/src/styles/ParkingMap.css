@@ -18,7 +18,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: fill; /* stretch and distort to fit container */
+  object-fit: fill;
 }
 
 .parking-map-overlay {
